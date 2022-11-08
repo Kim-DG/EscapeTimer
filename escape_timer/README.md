@@ -1,6 +1,6 @@
 # escape_timer
 
-Escaperoom Reservertion Timer
+A new Flutter project.
 
 ## Getting Started
 
