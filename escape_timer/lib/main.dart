@@ -44,42 +44,42 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-          child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return FutureBuilder(
-                  future: mainBloc.getList(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData == false) {
-                      return CircularProgressIndicator(); // CircularProgressIndicator : 로딩 에니메이션
-                    }
-
-                    //error가 발생하게 될 경우 반환하게 되는 부분
-                    else if (snapshot.hasError) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-
-                        child: Text(
-                          'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      );
-                    }
-
-                    // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 부분
-                    else {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-
-                        child: Text(
-                          mainBloc.listRoom[index].name, // 비동기 처리를 통해 받은 데이터를 텍스트에 뿌려줌
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      );
-                    }
-                  },
-                );
+          child: FutureBuilder(
+              future: mainBloc.getList(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData == false) {
+                  return CircularProgressIndicator(); // CircularProgressIndicator : 로딩 에니메이션
+                } else if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      Text(
+                        mainBloc.listRoom[0].topPlacementShowTime(15),
+                        // 비동기 처리를 통해 받은 데이터를 텍스트에 뿌려줌
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                            itemCount: mainBloc.listRoom.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  mainBloc.listRoom[index].name,
+                                  // 비동기 처리를 통해 받은 데이터를 텍스트에 뿌려줌
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  );
+                }
               })),
     );
   }

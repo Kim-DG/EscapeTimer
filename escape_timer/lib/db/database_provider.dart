@@ -51,12 +51,10 @@ class DatabaseProvider {
           sub_region: maps[index]['sub_region'] as String,
           prefer: maps[index]['prefer'] as int,
           day: maps[index]['day'] as int,
-          hour: maps[index]['hour'] as int,
-          second: maps[index]['second'] as int,
-          etc: maps[index]['etc'] as String);
+          etc: maps[index]['etc'] as String,
+          top_placement: maps[index]['top_placement'] as int);
     });
   }
-
 
 
 
