@@ -41,12 +41,12 @@ class EscapeRoom {
   }
 
   String topPlacementShowTime(int today) {
-    int reservationTime = calculateDay(today);
+    int reservationDay = calculateDay(today);
     if (day == 0){
       List<String> time = etc.split('/');
       return "$name의 ${time[1]}예약이 ${time[0]}에 열립니다.";
     }
-    return "$name의 $reservationTime일 예약이 오늘 $etc에 열립니다.";
+    return "$name의 $reservationDay일 예약이 오늘 $etc에 열립니다.";
   }
 }
 
