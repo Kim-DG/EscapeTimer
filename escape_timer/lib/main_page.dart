@@ -10,7 +10,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final mainBloc = MainBloc();
-  List<EscapeRoom> escapeList = MainBloc().listRoom.where((e) => e.getRegion() == "강남").toList();
+  List<EscapeRoom> escapeList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,7 @@ class _MainPageState extends State<MainPage> {
                 future: mainBloc.getList(),
                 builder:
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+
                   if (snapshot.hasData == false) {
                     return const CircularProgressIndicator(); // CircularProgressIndicator : 로딩 에니메이션
                   } else if (snapshot.hasError) {
@@ -34,6 +35,7 @@ class _MainPageState extends State<MainPage> {
                       ),
                     );
                   } else {
+                    escapeList = mainBloc.listRoom.where((e) => e.getRegion() == "강남").toList();
                     return Column(
                       children: [
                         bookMark(),
