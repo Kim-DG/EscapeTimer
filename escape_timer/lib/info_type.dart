@@ -1,0 +1,1 @@
+enum InfoType { bookmark, roomInfo }

@@ -29,24 +29,12 @@ class EscapeRoom {
         'top_placement': top_placement,
    };
 
-  String showName() {
+  String getRegion(){
+    return region;
+  }
+
+  String getName(){
     return name;
-  }
-
-  int calculateDay(int today){
-    if(etc == "자정"){
-      return today+day+1;
-    }
-    return today+day;
-  }
-
-  String topPlacementShowTime(int today) {
-    int reservationTime = calculateDay(today);
-    if (day == 0){
-      List<String> time = etc.split('/');
-      return "$name의 ${time[1]}예약이 ${time[0]}에 열립니다.";
-    }
-    return "$name의 $reservationTime일 예약이 오늘 $etc에 열립니다.";
   }
 }
 
