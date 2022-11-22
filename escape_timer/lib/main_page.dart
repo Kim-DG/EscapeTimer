@@ -10,7 +10,12 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final mainBloc = MainBloc();
-  List<EscapeRoom> escapeList = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +40,6 @@ class _MainPageState extends State<MainPage> {
                       ),
                     );
                   } else {
-                    escapeList = mainBloc.listRoom.where((e) => e.getRegion() == "강남").toList();
                     return Column(
                       children: [
                         bookMark(),
@@ -44,11 +48,11 @@ class _MainPageState extends State<MainPage> {
                         const SizedBox(height: 10.0,),
                         Expanded(
                           child: ListView.builder(
-                              itemCount: escapeList.length,
+                              itemCount: mainBloc.filterListRoom.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
                                     padding: const EdgeInsets.fromLTRB(12.0,0.0,12.0,12.0),
-                                    child: borderContainer(escapeRoom(escapeList[index]),
+                                    child: borderContainer(escapeRoom(mainBloc.filterListRoom[index]),
                                         Theme.of(context).primaryColor, 12.0));
                               }),
                         )
@@ -63,7 +67,7 @@ class _MainPageState extends State<MainPage> {
       width: double.infinity,
       padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
       child: Text(
-        mainBloc.roomInfo(escapeList[0],InfoType.bookmark),
+        mainBloc.roomInfo(mainBloc.filterListRoom[0],InfoType.bookmark),
         style: Theme.of(context).textTheme.bodyText1,
       ),
     );
@@ -129,21 +133,17 @@ class _MainPageState extends State<MainPage> {
   }
 
   filteringRoomByRegion(String region){
-    print(escapeList[0].getName());
-    escapeList = mainBloc.listRoom.where((e) => e.getRegion() == region).toList();
-    print(escapeList[0].getName());
-    print(escapeList.length);
+    mainBloc.filteringListRoom(region);
   }
 
   escapeRoomList() {
-    print("${escapeList[0].getName()}!");
     return Expanded(
       child: ListView.builder(
-          itemCount: escapeList.length,
+          itemCount: mainBloc.filterListRoom.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
                 padding: const EdgeInsets.fromLTRB(12.0,0.0,12.0,12.0),
-                child: borderContainer(escapeRoom(escapeList[index]),
+                child: borderContainer(escapeRoom(mainBloc.filterListRoom[index]),
                     Theme.of(context).primaryColor, 12.0));
           }),
     );
@@ -153,7 +153,7 @@ class _MainPageState extends State<MainPage> {
     return Row(
       children: [
         Text(
-          mainBloc.roomInfo(room,InfoType.roomInfo),
+          mainBloc.roomInfo(room,InfoType.list),
           style: Theme.of(context).textTheme.bodyText1,
         ),
       ],

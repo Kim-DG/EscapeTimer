@@ -1,1 +1,1 @@
-enum InfoType { bookmark, roomInfo }
+enum InfoType { bookmark, list, dialog }

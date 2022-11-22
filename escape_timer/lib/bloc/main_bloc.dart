@@ -5,12 +5,20 @@ import 'package:flutter/cupertino.dart';
 
 class MainBloc extends ChangeNotifier{
   final MainRepository _mainRepository = MainRepository();
-  late List<EscapeRoom> listRoom;
+  List<EscapeRoom> allListRoom = [];
+  List<EscapeRoom> filterListRoom = [];
   int today = 15;
 
   Future<List<EscapeRoom>> getList() async {
-    listRoom = await _mainRepository.getAllRooms();
-    return listRoom;
+    if(allListRoom.isEmpty) {
+      allListRoom = await _mainRepository.getAllRooms();
+      filterListRoom = allListRoom;
+    }
+    return allListRoom;
+  }
+
+  filteringListRoom(String region){
+    filterListRoom = allListRoom.where((e) => e.getRegion() == region).toList();
   }
 
   int calculateDay(EscapeRoom room){
@@ -21,18 +29,28 @@ class MainBloc extends ChangeNotifier{
   }
 
   String roomInfo(EscapeRoom room, InfoType type) {
-    int reservationTime = calculateDay(room);
-    if (room.day == 0){
-      List<String> time = room.etc.split('/');
-      if (type == InfoType.bookmark) {
-        return "${room.name}의\n${time[1]}예약은\n${time[0]}입니다.";
-      }
-      return "${room.name}\n${time[1]} 예약 - ${time[0]}";
+    int resDay = calculateDay(room);
+    List<String> otherTypeResDay = room.etc.split('/');
+    switch(type){
+      case InfoType.list:
+        return listTypeInfo(room, resDay, otherTypeResDay);
+      case InfoType.bookmark:
+        return bookmarkTypeInfo(room, resDay, otherTypeResDay);
+      case InfoType.dialog:
+        return "미구현";
     }
-    if (type == InfoType.bookmark) {
-      return "${room.name}의\n$reservationTime일 예약은\n금일 ${room.etc} 입니다.";
-    }
-    return "${room.name}\n$reservationTime일 예약 - 금일 ${room.etc}";
   }
 
+  String listTypeInfo(EscapeRoom room, int resDay, List<String> otherTypeResDay){
+    if(room.day == 0){
+      return "${room.name}\n${otherTypeResDay[1]} 예약 - ${otherTypeResDay[0]}";
+    }
+    return "${room.name}\n$resDay일 예약 - 금일 ${room.etc}";
+  }
+  String bookmarkTypeInfo(EscapeRoom room, int resDay, List<String> otherTypeResDay){
+    if(room.day == 0) {
+      return "${room.name}의\n${otherTypeResDay[1]}예약은\n${otherTypeResDay[0]}입니다.";
+    }
+    return "${room.name}의\n$resDay일 예약은\n금일 ${room.etc} 입니다.";
+  }
 }
