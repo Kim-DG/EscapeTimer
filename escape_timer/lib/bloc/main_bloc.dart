@@ -20,16 +20,24 @@ class MainBloc extends ChangeNotifier{
   filteringListRoom(String region){
     filterListRoom = allListRoom.where((e) => e.getRegion() == region).toList();
   }
-  
-  int calculateDay(EscapeRoom room){
+
+  int getToday(){
+    return 0;
+  }
+
+  int getCalculateMonth(){
+    return 11;
+  }
+
+  int getCalculateDay(EscapeRoom room){
     if(room.etc == "자정"){
-      return today+room.day+1;
+      return getToday()+room.day+1;
     }
-    return today+room.day;
+    return getToday()+room.day;
   }
 
   String roomInfo(EscapeRoom room, InfoType type) {
-    int resDay = calculateDay(room);
+    int resDay = getCalculateDay(room);
     List<String> otherTypeResDay = room.etc.split('/');
     switch(type){
       case InfoType.list:
