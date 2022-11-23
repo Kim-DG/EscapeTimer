@@ -20,7 +20,7 @@ class MainBloc extends ChangeNotifier{
   filteringListRoom(String region){
     filterListRoom = allListRoom.where((e) => e.getRegion() == region).toList();
   }
-
+  //test
   int calculateDay(EscapeRoom room){
     if(room.etc == "자정"){
       return today+room.day+1;
