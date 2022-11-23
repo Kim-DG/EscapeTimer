@@ -46,16 +46,7 @@ class _MainPageState extends State<MainPage> {
                         const SizedBox(height: 10.0,),
                         regionBar(),
                         const SizedBox(height: 10.0,),
-                        Expanded(
-                          child: ListView.builder(
-                              itemCount: mainBloc.filterListRoom.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                    padding: const EdgeInsets.fromLTRB(12.0,0.0,12.0,12.0),
-                                    child: borderContainer(escapeRoom(mainBloc.filterListRoom[index]),
-                                        Theme.of(context).primaryColor, 12.0));
-                              }),
-                        )
+                        escapeRoomList()
                       ],
                     );
                   }
@@ -156,6 +147,7 @@ class _MainPageState extends State<MainPage> {
           mainBloc.roomInfo(room,InfoType.list),
           style: Theme.of(context).textTheme.bodyText1,
         ),
+        //TODO 하트 아이콘
       ],
     );
   }
