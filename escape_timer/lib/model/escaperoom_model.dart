@@ -33,8 +33,12 @@ class EscapeRoom {
     return region;
   }
 
-  String getName(){
-    return name;
+  int getPrefer(){
+    return prefer;
+  }
+
+  int getTopPlacement(){
+    return top_placement;
   }
 }
 
