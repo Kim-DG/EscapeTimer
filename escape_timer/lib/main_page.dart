@@ -118,12 +118,13 @@ class _MainPageState extends State<MainPage> {
   escapeRoom(EscapeRoom room) {
     final mainBloc = Provider.of<MainBloc>(context);
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           mainBloc.roomInfo(room,InfoType.list),
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        //TODO 하트 아이콘
+        Icon(Icons.favorite_border_rounded),
       ],
     );
   }
