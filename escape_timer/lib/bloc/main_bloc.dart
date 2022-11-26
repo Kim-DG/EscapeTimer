@@ -6,21 +6,28 @@ import 'package:intl/intl.dart';
 
 
 class MainBloc extends ChangeNotifier{
-  final MainRepository _mainRepository = MainRepository();
-  List<EscapeRoom> allListRoom = [];
-  List<EscapeRoom> filterListRoom = [];
-  int today = 15;
+  MainBloc(){
+    _mainRepository = MainRepository();
+  }
+  late MainRepository _mainRepository;
+
+  List<EscapeRoom> _allListRoom = List.empty();
+  List<EscapeRoom> get allListRoom => _allListRoom;
+  List<EscapeRoom> _filterListRoom = List.empty();
+  List<EscapeRoom> get filterListRoom => _filterListRoom;
 
   Future<List<EscapeRoom>> getList() async {
     if(allListRoom.isEmpty) {
-      allListRoom = await _mainRepository.getAllRooms();
-      filterListRoom = allListRoom;
+      _allListRoom = await _mainRepository.getAllRooms();
+      _filterListRoom = allListRoom;
+      notifyListeners();
     }
     return allListRoom;
   }
 
   filteringListRoom(String region){
-    filterListRoom = allListRoom.where((e) => e.getRegion() == region).toList();
+    _filterListRoom = allListRoom.where((e) => e.getRegion() == region).toList();
+    notifyListeners();
   }
 
   String getCalculateDay(EscapeRoom room){

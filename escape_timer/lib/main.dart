@@ -1,5 +1,7 @@
+import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:escape_timer/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'main_page.dart';
 
@@ -18,7 +20,10 @@ class MyApp extends StatelessWidget {
       title: '방탈출 예약시간',
       theme: lightTheme,
       darkTheme: darkTheme,
-      home: MainPage(),
+      home: ChangeNotifierProvider(
+        create: (_) => MainBloc(),
+        child: MainPage(),
+    ),
     );
   }
 }

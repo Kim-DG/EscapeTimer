@@ -2,6 +2,7 @@ import 'package:escape_timer/Model/escaperoom_model.dart';
 import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:escape_timer/info_type.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -9,51 +10,34 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final mainBloc = MainBloc();
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    final mainBloc = Provider.of<MainBloc>(context, listen: false);
+    mainBloc.getList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            height: double.infinity,
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(16.0, 96.0, 16.0, 32.0),
-            child: FutureBuilder(
-                future: mainBloc.getList(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-
-                  if (snapshot.hasData == false) {
-                    return const CircularProgressIndicator(); // CircularProgressIndicator : 로딩 에니메이션
-                  } else if (snapshot.hasError) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        bookMark(),
-                        const SizedBox(height: 10.0,),
-                        regionBar(),
-                        const SizedBox(height: 10.0,),
-                        escapeRoomList()
-                      ],
-                    );
-                  }
-                })));
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(16.0, 96.0, 16.0, 32.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          //bookMark(),
+          const SizedBox(height: 10.0,),
+          regionBar(),
+          const SizedBox(height: 10.0,),
+          escapeRoomList()
+        ]),
+      ),
+    );
   }
 
   bookMark() {
+    final mainBloc = Provider.of<MainBloc>(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
@@ -76,14 +60,13 @@ class _MainPageState extends State<MainPage> {
   }
 
   regionList() {
+    final mainBloc = Provider.of<MainBloc>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         TextButton(
             onPressed: () {
-              setState((){
-                filteringRoomByRegion("강남");
-              });
+              mainBloc.filteringListRoom("강남");
             },
             child: Text(
               "강남",
@@ -91,9 +74,7 @@ class _MainPageState extends State<MainPage> {
             )),
         TextButton(
             onPressed: () {
-              setState((){
-                filteringRoomByRegion("홍대, 신촌");
-              });
+              mainBloc.filteringListRoom("홍대, 신촌");
             },
             child: Text(
               "홍대, 신촌",
@@ -101,9 +82,7 @@ class _MainPageState extends State<MainPage> {
             )),
         TextButton(
             onPressed: () {
-              setState((){
-                filteringRoomByRegion("그 외 서울");
-              });
+              mainBloc.filteringListRoom("그 외 서울");
             },
             child: Text(
               "그 외 서울",
@@ -111,9 +90,7 @@ class _MainPageState extends State<MainPage> {
             )),
         TextButton(
             onPressed: () {
-              setState((){
-                filteringRoomByRegion("수도권");
-              });
+              mainBloc.filteringListRoom("수도권");
             },
             child: Text(
               "수도권",
@@ -123,11 +100,9 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  filteringRoomByRegion(String region){
-    mainBloc.filteringListRoom(region);
-  }
 
   escapeRoomList() {
+    final mainBloc = Provider.of<MainBloc>(context);
     return Expanded(
       child: ListView.builder(
           itemCount: mainBloc.filterListRoom.length,
@@ -141,6 +116,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   escapeRoom(EscapeRoom room) {
+    final mainBloc = Provider.of<MainBloc>(context);
     return Row(
       children: [
         Text(
