@@ -30,6 +30,15 @@ class MainBloc extends ChangeNotifier{
     notifyListeners();
   }
 
+  filteringFavorite(){
+    //_filterListRoom = _filterListRoom.where
+  }
+
+  setPrefer(EscapeRoom room){
+    room.prefer == 0 ? room.prefer = 1 : room.prefer = 0;
+    notifyListeners();
+  }
+
   String getCalculateDay(EscapeRoom room){
     var date = DateTime.now().add(Duration(days:room.day));
     if (room.etc == "자정") date.add(const Duration(days: 1));

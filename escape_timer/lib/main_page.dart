@@ -1,6 +1,7 @@
 import 'package:escape_timer/Model/escaperoom_model.dart';
 import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:escape_timer/info_type.dart';
+import 'package:escape_timer/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,10 +27,14 @@ class _MainPageState extends State<MainPage> {
         width: double.infinity,
         padding: const EdgeInsets.fromLTRB(16.0, 96.0, 16.0, 32.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          //bookMark(),
-          const SizedBox(height: 10.0,),
+          bookMark(),
+          const SizedBox(
+            height: 10.0,
+          ),
           regionBar(),
-          const SizedBox(height: 10.0,),
+          const SizedBox(
+            height: 10.0,
+          ),
           escapeRoomList()
         ]),
       ),
@@ -38,12 +43,18 @@ class _MainPageState extends State<MainPage> {
 
   bookMark() {
     final mainBloc = Provider.of<MainBloc>(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
-      child: Text(
-        mainBloc.roomInfo(mainBloc.filterListRoom[0],InfoType.bookmark),
+      child: Text("test",
+        /*
+        mainBloc.roomInfo(mainBloc.filterListRoom[0], InfoType.bookmark),
+
+         */
         style: Theme.of(context).textTheme.bodyText1,
+
+
       ),
     );
   }
@@ -100,7 +111,6 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-
   escapeRoomList() {
     final mainBloc = Provider.of<MainBloc>(context);
     return Expanded(
@@ -108,9 +118,11 @@ class _MainPageState extends State<MainPage> {
           itemCount: mainBloc.filterListRoom.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
-                padding: const EdgeInsets.fromLTRB(12.0,0.0,12.0,12.0),
-                child: borderContainer(escapeRoom(mainBloc.filterListRoom[index]),
-                    Theme.of(context).primaryColor, 12.0));
+                padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 12.0),
+                child: borderContainer(
+                    escapeRoom(mainBloc.filterListRoom[index]),
+                    Theme.of(context).primaryColor,
+                    12.0));
           }),
     );
   }
@@ -121,10 +133,16 @@ class _MainPageState extends State<MainPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          mainBloc.roomInfo(room,InfoType.list),
+          mainBloc.roomInfo(room, InfoType.list),
           style: Theme.of(context).textTheme.bodyText1,
         ),
-        Icon(Icons.favorite_border_rounded),
+        IconButton(
+            icon: room.prefer == 0
+                ? Icon(Icons.favorite_border_rounded, color: Colors.orange)
+                : Icon(Icons.favorite_rounded, color: Colors.orange),
+            onPressed: () {
+              mainBloc.setPrefer(room);
+            })
       ],
     );
   }
