@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:escape_timer/Model/escaperoom_model.dart';
@@ -38,7 +39,13 @@ class DatabaseProvider {
     } else {
       print("Opening existing database");
     }
-    return await openDatabase(path);
+    return await openDatabase(path, version: 1, onUpgrade: _onUpgrade);
+  }
+
+  FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) {
+    if (oldVersion < newVersion) {
+      print("DB upgrade");
+    }
   }
 
   Future<List<EscapeRoom>> getAllRooms() async {

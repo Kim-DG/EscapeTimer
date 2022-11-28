@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 const themeGray = Color(0xFFDFDFDF);
 const themeLightGray = Color(0xFFF1F1F1);
 const themeDarkGray = Color(0xFF4E4E4E);
+const themeBlack = Color(0xFF2F2F2F);
 
 ThemeData lightTheme = ThemeData(
   scaffoldBackgroundColor: themeGray,
@@ -23,7 +24,7 @@ ThemeData lightTheme = ThemeData(
 
 ThemeData darkTheme = ThemeData(
   scaffoldBackgroundColor: themeDarkGray,
-  primaryColor: Colors.black,
+  primaryColor: themeBlack,
   secondaryHeaderColor: themeLightGray,
   fontFamily: 'Cafe',
   textTheme: TextTheme(

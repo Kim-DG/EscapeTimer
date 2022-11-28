@@ -1,6 +1,7 @@
 import 'package:escape_timer/Model/escaperoom_model.dart';
 import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,14 +18,38 @@ class _MainPageState extends State<MainPage> {
     mainBloc.getList();
   }
 
+  BannerAd banner = BannerAd(
+    listener: BannerAdListener(
+      onAdFailedToLoad: (Ad ad, LoadAdError error) {},
+      onAdLoaded: (_) {},
+    ),
+    adUnitId: "ca-app-pub-3940256099942544/6300978111",
+    request: AdRequest(),
+    size: AdSize.banner,
+  )..load();
+
+  @override
+  void dispose() {
+    super.dispose();
+    banner.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(16.0, 96.0, 16.0, 32.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 32.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          SizedBox(
+            height: 50,
+            child: AdWidget(
+              ad: banner,
+            )),
+          const SizedBox(
+            height: 32.0,
+          ),
           bookMark(),
           const SizedBox(
             height: 10.0,

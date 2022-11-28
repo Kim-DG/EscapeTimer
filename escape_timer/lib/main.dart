@@ -1,12 +1,16 @@
 import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:escape_timer/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
 import 'main_page.dart';
 
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
