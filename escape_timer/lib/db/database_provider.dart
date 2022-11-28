@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:escape_timer/Model/escaperoom_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -22,7 +23,9 @@ class DatabaseProvider {
 
     if (!exists) {
       // Should happen only the first time you launch your application
-      print("Creating new copy from asset");
+      if (kDebugMode) {
+        print("Creating new copy from asset");
+      }
 
       // Make sure the parent directory exists
       try {
@@ -37,14 +40,18 @@ class DatabaseProvider {
       // Write and flush the bytes written
       await File(path).writeAsBytes(bytes, flush: true);
     } else {
-      print("Opening existing database");
+      if (kDebugMode) {
+        print("Opening existing database");
+      }
     }
     return await openDatabase(path, version: 1, onUpgrade: _onUpgrade);
   }
 
   FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      print("DB upgrade");
+      if (kDebugMode) {
+        print("DB upgrade");
+      }
     }
   }
 
@@ -66,6 +73,8 @@ class DatabaseProvider {
   Future roomUpdate(EscapeRoom room) async {
     var db = await database;
     await db!.update('escaperoom', room.toMap(), where: 'id = ?', whereArgs: [room.id]);
-    print("update escaperoom");
+    if (kDebugMode) {
+      print("update escaperoom");
+    }
   }
 }
