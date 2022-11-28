@@ -15,18 +15,20 @@ ThemeData lightTheme = ThemeData(
   secondaryHeaderColor: themeDarkGray,
   fontFamily: 'Cafe',
   textTheme: TextTheme(
-      bodyText1: TextStyle(color: Colors.black, fontSize: 16),
-      bodyText2: TextStyle(color: themeLightGray, fontSize: 12)
+    headline1: TextStyle(color: Colors.black, fontSize: 20),
+    bodyText1: TextStyle(color: Colors.black, fontSize: 16),
+    bodyText2: TextStyle(color: themeLightGray, fontSize: 14)
   )
 );
 
 ThemeData darkTheme = ThemeData(
   scaffoldBackgroundColor: themeDarkGray,
-  primaryColor: themeGray,
+  primaryColor: Colors.black,
   secondaryHeaderColor: themeLightGray,
   fontFamily: 'Cafe',
   textTheme: TextTheme(
-      bodyText1: TextStyle(color: themeLightGray, fontSize: 16),
-      bodyText2: TextStyle(color: Colors.black, fontSize: 12)
+    headline1: TextStyle(color: themeLightGray, fontSize: 20),
+    bodyText1: TextStyle(color: themeLightGray, fontSize: 16),
+    bodyText2: TextStyle(color: Colors.black, fontSize: 14)
   )
 );

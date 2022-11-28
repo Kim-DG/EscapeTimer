@@ -14,4 +14,8 @@ class MainRepository{
    Future<List<EscapeRoom>> getAllRooms() async {
       return await databaseProvider.getAllRooms();
     }
+
+   Future roomUpdate(EscapeRoom room) async{
+     await databaseProvider.roomUpdate(room);
+   }
 }

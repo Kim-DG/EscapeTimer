@@ -56,6 +56,9 @@ class DatabaseProvider {
     });
   }
 
-
-
+  Future roomUpdate(EscapeRoom room) async {
+    var db = await database;
+    await db!.update('escaperoom', room.toMap(), where: 'id = ?', whereArgs: [room.id]);
+    print("update escaperoom");
+  }
 }

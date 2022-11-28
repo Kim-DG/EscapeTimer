@@ -1,7 +1,5 @@
 import 'package:escape_timer/Model/escaperoom_model.dart';
 import 'package:escape_timer/bloc/main_bloc.dart';
-import 'package:escape_timer/info_type.dart';
-import 'package:escape_timer/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -47,14 +45,9 @@ class _MainPageState extends State<MainPage> {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
-      child: Text("test",
-        /*
-        mainBloc.roomInfo(mainBloc.filterListRoom[0], InfoType.bookmark),
-
-         */
-        style: Theme.of(context).textTheme.bodyText1,
-
-
+      child: Text(
+        mainBloc.bookmarkTypeInfo(),
+        style: Theme.of(context).textTheme.headline1,
       ),
     );
   }
@@ -71,44 +64,27 @@ class _MainPageState extends State<MainPage> {
   }
 
   regionList() {
-    final mainBloc = Provider.of<MainBloc>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        TextButton(
-            onPressed: () {
-              mainBloc.filteringListRoom("강남");
-            },
-            child: Text(
-              "강남",
-              style: Theme.of(context).textTheme.bodyText2,
-            )),
-        TextButton(
-            onPressed: () {
-              mainBloc.filteringListRoom("홍대, 신촌");
-            },
-            child: Text(
-              "홍대, 신촌",
-              style: Theme.of(context).textTheme.bodyText2,
-            )),
-        TextButton(
-            onPressed: () {
-              mainBloc.filteringListRoom("그 외 서울");
-            },
-            child: Text(
-              "그 외 서울",
-              style: Theme.of(context).textTheme.bodyText2,
-            )),
-        TextButton(
-            onPressed: () {
-              mainBloc.filteringListRoom("수도권");
-            },
-            child: Text(
-              "수도권",
-              style: Theme.of(context).textTheme.bodyText2,
-            )),
+        regionListTextButton("강남"),
+        regionListTextButton("홍대, 신촌"),
+        regionListTextButton("그 외 서울"),
+        regionListTextButton("수도권")
       ],
     );
+  }
+
+  regionListTextButton(String region) {
+    final mainBloc = Provider.of<MainBloc>(context);
+    return TextButton(
+        onPressed: () {
+          mainBloc.filteringListRoom(region);
+        },
+        child: Text(
+          region,
+          style: Theme.of(context).textTheme.bodyText2,
+        ));
   }
 
   escapeRoomList() {
@@ -130,21 +106,115 @@ class _MainPageState extends State<MainPage> {
   escapeRoom(EscapeRoom room) {
     final mainBloc = Provider.of<MainBloc>(context);
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text(
-          mainBloc.roomInfo(room, InfoType.list),
-          style: Theme.of(context).textTheme.bodyText1,
+        Expanded(
+          child: TextButton(
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                mainBloc.listTypeInfo(room),
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            ),
+            onPressed: () {
+              roomInfoDialog(room);
+            },
+          ),
         ),
         IconButton(
             icon: room.prefer == 0
-                ? Icon(Icons.favorite_border_rounded, color: Colors.orange)
-                : Icon(Icons.favorite_rounded, color: Colors.orange),
+                ? const Icon(Icons.favorite_border_rounded, color: Colors.orange)
+                : const Icon(Icons.favorite_rounded, color: Colors.orange),
             onPressed: () {
               mainBloc.setPrefer(room);
             })
       ],
     );
+  }
+
+  roomInfoDialog(EscapeRoom room) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              backgroundColor: Colors.transparent,
+              child: borderContainer(
+                  roomInfoDetail(room), Theme.of(context).primaryColor, 12.0));
+        });
+  }
+
+  roomInfoDetail(EscapeRoom room) {
+    final mainBloc = Provider.of<MainBloc>(context);
+
+    return StatefulBuilder(builder: (__, StateSetter setState) {
+      return DefaultTextStyle(
+        style: Theme.of(context).textTheme.bodyText1!,
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(padding: const EdgeInsets.all(16.0),child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("테마이름: ${room.name}"),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                      "오픈날짜: ${room.day != 0 ? mainBloc.getNormalTypeOpen(room) : mainBloc.getOtherTypeOpen(room, 1)}"
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                      "오픈시간: ${room.day != 0 ? "금일 ${room.etc}" : mainBloc.getOtherTypeOpen(room, 0)}"
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  Text(
+                      "지역: ${room.region} / ${room.sub_region}"
+                  ),
+                ],
+              ),),
+
+
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: IconButton(
+                        icon: room.prefer == 0
+                            ? const Icon(Icons.favorite_border_rounded,
+                            color: Colors.orange)
+                            : const Icon(Icons.favorite_rounded,
+                            color: Colors.orange),
+                        onPressed: () {
+                          setState(() {
+                            mainBloc.setPrefer(room);
+                          });
+                        }),
+                  ),
+                  Expanded(
+                    child: IconButton(
+                        icon: room.top_placement == 0
+                            ? Icon(Icons.star_border, color: Colors.orange)
+                            : Icon(Icons.star, color: Colors.orange),
+                        onPressed: () {
+                          setState(() {
+                            mainBloc.setTopPlacement(room);
+                          });
+                        }),
+                  ),
+                ],
+              )
+
+
+            ]),
+      );
+    });
   }
 
   borderContainer(Widget w, Color c, double padding) {

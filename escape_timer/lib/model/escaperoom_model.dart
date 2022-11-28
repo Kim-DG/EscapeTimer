@@ -28,18 +28,6 @@ class EscapeRoom {
         'etc': etc,
         'top_placement': top_placement,
    };
-
-  String getRegion(){
-    return region;
-  }
-
-  int getPrefer(){
-    return prefer;
-  }
-
-  int getTopPlacement(){
-    return top_placement;
-  }
 }
 
 

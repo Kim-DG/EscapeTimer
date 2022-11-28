@@ -1,1 +1,0 @@
-enum InfoType { bookmark, list, dialog }
