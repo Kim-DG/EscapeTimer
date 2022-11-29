@@ -66,7 +66,7 @@ class MainBloc extends ChangeNotifier{
 
   String getCalculateDay(EscapeRoom room){
     var date = DateTime.now().add(Duration(days:room.day));
-    if (room.etc == "자정") date.add(const Duration(days: 1));
+    if (room.etc == "자정") date = date.add(const Duration(days: 1));
     var day = DateFormat('MM/dd').format(date);
     return day;
   }
