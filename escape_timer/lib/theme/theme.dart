@@ -15,7 +15,7 @@ ThemeData lightTheme = ThemeData(
   primaryColor: themeLightGray,
   secondaryHeaderColor: themeDarkGray,
   fontFamily: 'Cafe',
-  textTheme: TextTheme(
+  textTheme: const TextTheme(
     headline1: TextStyle(color: Colors.black, fontSize: 20),
     bodyText1: TextStyle(color: Colors.black, fontSize: 16),
     bodyText2: TextStyle(color: themeLightGray, fontSize: 14)
@@ -27,7 +27,7 @@ ThemeData darkTheme = ThemeData(
   primaryColor: themeBlack,
   secondaryHeaderColor: themeLightGray,
   fontFamily: 'Cafe',
-  textTheme: TextTheme(
+  textTheme: const TextTheme(
     headline1: TextStyle(color: themeLightGray, fontSize: 20),
     bodyText1: TextStyle(color: themeLightGray, fontSize: 16),
     bodyText2: TextStyle(color: Colors.black, fontSize: 14)
