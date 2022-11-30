@@ -23,7 +23,7 @@ class _MainPageState extends State<MainPage> {
       onAdFailedToLoad: (Ad ad, LoadAdError error) {},
       onAdLoaded: (_) {},
     ),
-    adUnitId: "ca-app-pub-3940256099942544/6300978111",
+    adUnitId: "ca-app-pub-3403461397972740/2738190500",
     request: const AdRequest(),
     size: AdSize.banner,
   )..load();
