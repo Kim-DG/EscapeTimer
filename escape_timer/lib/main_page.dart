@@ -66,14 +66,32 @@ class _MainPageState extends State<MainPage> {
 
   bookMark() {
     final mainBloc = Provider.of<MainBloc>(context);
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
-      child: Text(
-        mainBloc.bookmarkTypeInfo(),
-        style: Theme.of(context).textTheme.headline1,
-      ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
+            child: Text(
+              mainBloc.bookmarkTypeInfo(),
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: IconButton(
+            constraints: const BoxConstraints(),
+            icon: mainBloc.filterFavorite
+                ? const Icon(Icons.favorite_rounded, color: Colors.orange, size: 32,)
+                : const Icon(Icons.favorite_border_rounded, color: Colors.orange, size: 32,),
+            onPressed: (){
+              mainBloc.filteringFavorite();
+            },
+          ),
+        )
+      ],
     );
   }
 

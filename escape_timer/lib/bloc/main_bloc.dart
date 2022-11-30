@@ -14,6 +14,12 @@ class MainBloc extends ChangeNotifier{
   EscapeRoom _bookmarkRoom = EscapeRoom(id: -1, name: "dummy", region: "dummy", sub_region: "dummy", prefer: 0, day: 0, etc: "dummy", top_placement: 0);
   EscapeRoom get bookmarkRoom => _bookmarkRoom;
 
+  bool _filterFavorite = false;
+  bool get filterFavorite => _filterFavorite;
+
+  String _currentRegion = "강남";
+  String get currentRegion => _currentRegion;
+
   List<EscapeRoom> _allListRoom = List.empty();
   List<EscapeRoom> get allListRoom => _allListRoom;
 
@@ -31,12 +37,23 @@ class MainBloc extends ChangeNotifier{
   }
 
   void filteringListRoom(String region){
-    _filterListRoom = allListRoom.where((e) => e.region == region).toList();
+    _currentRegion = region;
+    _filterListRoom = allListRoom.where((e) => e.region == currentRegion).toList();
+    if(_filterFavorite){
+      _filterListRoom = _filterListRoom.where((e) => e.prefer == 1).toList();
+    }
     notifyListeners();
   }
 
   void filteringFavorite(){
-    //_filterListRoom = _filterListRoom.where
+    _filterFavorite = !_filterFavorite;
+    if(_filterFavorite){
+      _filterListRoom = _filterListRoom.where((e) => e.prefer == 1).toList();
+    }
+    else{
+      _filterListRoom = allListRoom.where((e) => e.region == currentRegion).toList();
+    }
+    notifyListeners();
   }
 
   void setBookmark(){
