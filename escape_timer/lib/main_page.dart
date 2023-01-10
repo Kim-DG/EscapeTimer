@@ -2,7 +2,9 @@ import 'package:escape_timer/Model/escaperoom_model.dart';
 import 'package:escape_timer/bloc/main_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:ntp/ntp.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,7 +15,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
     final mainBloc = Provider.of<MainBloc>(context, listen: false);
     mainBloc.getList();
   }
@@ -46,7 +47,8 @@ class _MainPageState extends State<MainPage> {
             height: 50,
             child: AdWidget(
               ad: banner,
-            )),
+            )
+          ),
           const SizedBox(
             height: 32.0,
           ),
@@ -72,7 +74,8 @@ class _MainPageState extends State<MainPage> {
           flex: 4,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
+            padding:
+                const EdgeInsets.only(left: 12.0, bottom: 12.0, right: 12.0),
             child: Text(
               mainBloc.bookmarkTypeInfo(),
               style: Theme.of(context).textTheme.headline1,
@@ -84,9 +87,17 @@ class _MainPageState extends State<MainPage> {
           child: IconButton(
             constraints: const BoxConstraints(),
             icon: mainBloc.filterFavorite
-                ? const Icon(Icons.favorite_rounded, color: Colors.orange, size: 32,)
-                : const Icon(Icons.favorite_border_rounded, color: Colors.orange, size: 32,),
-            onPressed: (){
+                ? const Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.orange,
+                    size: 32,
+                  )
+                : const Icon(
+                    Icons.favorite_border_rounded,
+                    color: Colors.orange,
+                    size: 32,
+                  ),
+            onPressed: () {
               mainBloc.filteringFavorite();
             },
           ),
@@ -141,7 +152,7 @@ class _MainPageState extends State<MainPage> {
                 child: borderContainer(
                     escapeRoom(mainBloc.filterListRoom[index]),
                     Theme.of(context).primaryColor,
-                    12.0));
+                    8.0));
           }),
     );
   }
@@ -166,12 +177,22 @@ class _MainPageState extends State<MainPage> {
           ),
         ),
         IconButton(
-            icon: room.prefer == 0
-                ? const Icon(Icons.favorite_border_rounded, color: Colors.orange)
-                : const Icon(Icons.favorite_rounded, color: Colors.orange),
+            icon: Icon(Icons.calendar_month, color: Colors.orange),
             onPressed: () {
-              mainBloc.setPrefer(room);
-            })
+              calendarDialog(room);
+            }),
+        Column(
+          children: [
+            IconButton(
+                icon: room.prefer == 0
+                    ? const Icon(Icons.favorite_border_rounded,
+                        color: Colors.orange)
+                    : const Icon(Icons.favorite_rounded, color: Colors.orange),
+                onPressed: () {
+                  mainBloc.setPrefer(room);
+                }),
+          ],
+        )
       ],
     );
   }
@@ -198,32 +219,29 @@ class _MainPageState extends State<MainPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(padding: const EdgeInsets.all(16.0),child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("테마이름: ${room.name}"),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                      "오픈날짜: ${room.day != 0 ? mainBloc.getNormalTypeOpen(room) : mainBloc.getOtherTypeOpen(room, 1)}"
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                      "오픈시간: ${room.day != 0 ? "금일 ${room.etc}" : mainBloc.getOtherTypeOpen(room, 0)}"
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                      "지역: ${room.region} / ${room.sub_region}"
-                  ),
-                ],
-              ),),
-
-
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("테마이름: ${room.name}"),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                        "오픈날짜: ${room.day != 0 ? mainBloc.getNormalTypeOpen(room) : mainBloc.getOtherTypeOpen(room, 1)}"),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                        "오픈시간: ${room.day != 0 ? room.etc : mainBloc.getOtherTypeOpen(room, 0)}"),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text("지역: ${room.region} / ${room.sub_region}"),
+                  ],
+                ),
+              ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -231,9 +249,9 @@ class _MainPageState extends State<MainPage> {
                     child: IconButton(
                         icon: room.prefer == 0
                             ? const Icon(Icons.favorite_border_rounded,
-                            color: Colors.orange)
+                                color: Colors.orange)
                             : const Icon(Icons.favorite_rounded,
-                            color: Colors.orange),
+                                color: Colors.orange),
                         onPressed: () {
                           setState(() {
                             mainBloc.setPrefer(room);
@@ -253,11 +271,83 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ],
               )
-
-
             ]),
       );
     });
+  }
+
+  calendarDialog(EscapeRoom room) {
+    final mainBloc = Provider.of<MainBloc>(context, listen: false);
+    DateTime focused = DateTime.now();
+    DateTime selected = DateTime.now();
+    String reservationTime = "";
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+              backgroundColor: Colors.transparent,
+              child: StatefulBuilder(builder: (__, StateSetter setState) {
+                return borderContainer(
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(room.name,
+                            style: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor)),
+                        TableCalendar(
+                          locale: 'ko_KR',
+                          firstDay: DateTime.now(),
+                          lastDay: DateTime.utc(2030, 12, 31),
+                          focusedDay: focused,
+                          onDaySelected:
+                              (DateTime selectedDay, DateTime focusedDay) {
+                            setState(() {
+                              selected = selectedDay;
+                              focused = focusedDay;
+                              reservationTime = mainBloc.getCalendarTime(room, selectedDay);
+                            });
+                          },
+                          selectedDayPredicate: (DateTime day) {
+                            return isSameDay(selected, day);
+                          },
+                          headerStyle: HeaderStyle(
+                            titleCentered: true,
+                            formatButtonVisible: false,
+                            titleTextStyle: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor),
+                          ),
+                          calendarStyle: CalendarStyle(
+                            selectedTextStyle: const TextStyle(
+                              color: Color(0xFFFAFAFA),
+                              fontSize: 16.0,
+                            ),
+                            selectedDecoration: const BoxDecoration(
+                              color: Color(0xFF5C6BC0),
+                              shape: BoxShape.circle,
+                            ),
+                            outsideTextStyle: TextStyle(
+                                color:
+                                Theme.of(context).scaffoldBackgroundColor),
+                            weekendTextStyle: const TextStyle(color: Colors.blue),
+                            defaultTextStyle: TextStyle(
+                                color: Theme.of(context).secondaryHeaderColor),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text("오픈 예약 시간:\n$reservationTime",
+                              style: TextStyle(
+                                  color: Theme.of(context).secondaryHeaderColor)),
+                        )
+                      ],
+                    ),
+                    Theme.of(context).primaryColor,
+                    12.0);
+              }));
+        });
   }
 
   borderContainer(Widget w, Color c, double padding) {

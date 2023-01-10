@@ -81,6 +81,15 @@ class MainBloc extends ChangeNotifier{
     notifyListeners();
   }
 
+  String getCalendarTime(EscapeRoom room, DateTime date){
+    if (room.etc == "자정") date = date.subtract(const Duration(days: 1));
+    date = date.subtract(Duration(days: room.day));
+    var resDate = DateFormat('MM/dd').format(date).split('/');
+    int day = int.parse(resDate[1]);
+    int month = int.parse(resDate[0]);
+    return "$month월 $day일 ${room.etc}";
+  }
+
   String getCalculateDay(EscapeRoom room){
     var date = DateTime.now().add(Duration(days:room.day));
     if (room.etc == "자정") date = date.add(const Duration(days: 1));
@@ -101,13 +110,13 @@ class MainBloc extends ChangeNotifier{
   }
 
   String listTypeInfo(EscapeRoom room) {
-    if(room.day == 0) return "${room.name}\n${getOtherTypeOpen(room, 1)} 예약 - ${getOtherTypeOpen(room, 0)}";
-    return "${room.name}\n${getNormalTypeOpen(room)} 예약 - 금일 ${room.etc}";
+    if(room.day == 0) return "${room.name}\n${getOtherTypeOpen(room, 1)} 예약:\n${getOtherTypeOpen(room, 0)}";
+    return "${room.name}\n${getNormalTypeOpen(room)} 예약:\n오늘 ${room.etc}";
   }
 
   String bookmarkTypeInfo(){
     if(_bookmarkRoom.id == -1) return("");
     if(_bookmarkRoom.day == 0) return "${_bookmarkRoom.name}의\n${getOtherTypeOpen(_bookmarkRoom, 1)}예약은\n${getOtherTypeOpen(_bookmarkRoom, 0)}입니다";
-    return "${_bookmarkRoom.name}의\n${getNormalTypeOpen(_bookmarkRoom)} 예약은\n금일 ${bookmarkRoom.etc} 입니다";
+    return "${_bookmarkRoom.name}의\n${getNormalTypeOpen(_bookmarkRoom)} 예약은\n오늘 ${bookmarkRoom.etc} 입니다";
   }
 }
